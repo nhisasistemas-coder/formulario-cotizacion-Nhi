@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Cotización Técnica — NHI Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --green:#3A6B47;--green-light:#eaf2ec;--green-mid:#c5ddc9;
+  --gray:#58565B;--gray-light:#f5f5f6;--gray-mid:#d0cfd2;
+  --white:#ffffff;--text:#2a2a2e;--text-light:#6b6b72;
+  --error:#c0392b;--radius:6px;--shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-height:100vh;font-size:15px;}
+.site-header{background:var(--white);border-bottom:1px solid var(--gray-mid);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.logo-wrap img{height:44px;width:auto;}
+.lang-switcher{display:flex;gap:4px;}
+.lang-btn{background:none;border:1px solid var(--gray-mid);color:var(--text-light);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:4px 10px;border-radius:var(--radius);cursor:pointer;transition:all .15s;letter-spacing:.03em;}
+.lang-btn.active,.lang-btn:hover{background:var(--green);border-color:var(--green);color:var(--white);}
+.page-wrap{max-width:680px;margin:36px auto 60px;padding:0 16px;}
+.card{background:var(--white);border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.07);overflow:hidden;}
+.card-header{background:var(--white);border-bottom:3px solid var(--green);padding:28px 32px 20px;}
+.card-header h1{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.card-header p{margin-top:6px;color:var(--text-light);font-size:14px;line-height:1.5;}
+.card-body{padding:28px 32px;}
+.progress-wrap{margin-bottom:28px;}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-label{font-size:12px;font-weight:500;color:var(--text-light);transition:color .2s;}
+.prog-label.active{color:var(--green);font-weight:600;}
+.progress-bar-bg{height:4px;background:var(--gray-mid);border-radius:2px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--green);border-radius:2px;transition:width .35s ease;}
+.section-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--green-mid);}
+.field{margin-bottom:20px;}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.field label .req{color:var(--green);margin-left:2px;}
+.field label .opt{color:var(--text-light);font-weight:400;font-size:12px;margin-left:4px;}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--gray-mid);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--white);transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(58,107,71,.1);}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2358565B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.field textarea{resize:vertical;min-height:90px;}
+.field .hint{font-size:12px;color:var(--text-light);margin-top:5px;line-height:1.4;}
+.field-row{display:flex;gap:14px;}
+.field-row .field{flex:1;}
+.field .err-msg{font-size:12px;color:var(--error);margin-top:4px;display:none;}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--error);}
+.field.invalid .err-msg{display:block;}
+.sub-field{margin-top:12px;padding:14px;background:var(--green-light);border-radius:var(--radius);border-left:3px solid var(--green);display:none;}
+.sub-field.visible{display:block;}
+.sub-field label{font-size:13px;font-weight:500;margin-bottom:6px;display:block;}
+.sub-field select,.sub-field input{width:100%;padding:9px 12px;border:1.5px solid var(--green-mid);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:14px;background:var(--white);color:var(--text);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2358565B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.sub-field select:focus,.sub-field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(58,107,71,.1);}
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-mid);}
+.btn{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;padding:11px 28px;border-radius:var(--radius);cursor:pointer;transition:all .15s;border:none;}
+.btn-primary{background:var(--green);color:var(--white);}
+.btn-primary:hover{background:#2e5438;}
+.btn-primary:disabled{background:var(--gray-mid);cursor:not-allowed;}
+.btn-secondary{background:none;color:var(--green);border:1.5px solid var(--green);}
+.btn-secondary:hover{background:var(--green-light);}
+/* ADD PRODUCT BUTTON */
+.add-product-wrap{margin-top:24px;padding-top:20px;border-top:2px dashed var(--green-mid);text-align:center;}
+.btn-add-product{background:var(--green-light);color:var(--green);border:1.5px solid var(--green-mid);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;padding:12px 28px;border-radius:var(--radius);cursor:pointer;transition:all .15s;width:100%;}
+.btn-add-product:hover{background:var(--green);color:var(--white);border-color:var(--green);}
+.btn-add-product:disabled{background:var(--gray-light);color:var(--gray-mid);border-color:var(--gray-mid);cursor:not-allowed;}
+/* PRODUCT BLOCK */
+.product-block{margin-bottom:8px;}
+.product-header{display:flex;align-items:center;justify-content:space-between;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px;}
+.product-label{font-size:14px;font-weight:700;color:var(--green);letter-spacing:.01em;}
+.product-badge{font-size:11px;background:var(--green);color:var(--white);border-radius:20px;padding:3px 10px;font-weight:600;}
+.product-separator{height:2px;background:linear-gradient(to right,var(--green-mid),transparent);margin:28px 0;border-radius:2px;}
+/* STEP PANELS */
+.step-panel{display:none;}
+.step-panel.active{display:block;}
+/* REVIEW */
+.review-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:16px;}
+.review-table tr:nth-child(even) td{background:var(--gray-light);}
+.review-table td{padding:9px 12px;border:1px solid var(--gray-mid);vertical-align:top;}
+.review-table td:first-child{font-weight:500;width:40%;color:var(--text-light);font-size:13px;}
+.review-product-title{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin:20px 0 8px;padding:8px 12px;background:var(--green-light);border-radius:var(--radius);border-left:3px solid var(--green);}
+.review-product-title:first-child{margin-top:0;}
+/* ATTENDEE CARDS */
+.attendee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+.attendee-card{border:2px solid var(--gray-mid);border-radius:8px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .15s;}
+.attendee-card:hover{border-color:var(--green);background:var(--green-light);}
+.attendee-card.selected{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 3px rgba(58,107,71,.15);}
+.attendee-card input[type=radio]{display:none;}
+.attendee-name{font-weight:700;font-size:16px;color:var(--text);display:block;}
+/* SUCCESS */
+#successScreen{display:none;text-align:center;padding:48px 32px;}
+.success-icon{width:64px;height:64px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.success-icon svg{width:32px;height:32px;}
+#successScreen h2{font-size:22px;font-weight:700;margin-bottom:10px;color:var(--text);}
+#successScreen p{color:var(--text-light);font-size:15px;line-height:1.6;max-width:400px;margin:0 auto 28px;}
+/* ADMIN */
+#adminPanel{display:none;padding:28px 32px;}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.admin-header h2{font-size:18px;font-weight:700;color:var(--text);}
+.admin-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.admin-table-wrap{overflow-x:auto;}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px;}
+.admin-table th{background:var(--green);color:var(--white);padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;}
+.admin-table td{padding:9px 12px;border-bottom:1px solid var(--gray-mid);vertical-align:top;}
+.admin-table tr:hover td{background:var(--green-light);}
+.detail-btn{font-size:12px;padding:4px 10px;background:var(--green-light);border:1px solid var(--green-mid);border-radius:4px;color:var(--green);cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;}
+.detail-panel{background:var(--gray-light);border-radius:6px;padding:14px;margin-top:8px;font-size:13px;line-height:1.8;display:none;}
+.site-footer{text-align:center;padding:20px;font-size:12px;color:var(--text-light);}
+.admin-link{background:none;border:none;color:var(--text-light);font-size:11px;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif;margin-top:6px;display:block;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:10px;padding:28px;width:90%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,0.15);}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:10px;}
+.modal p{color:var(--text-light);font-size:14px;margin-bottom:20px;}
+.modal input{width:100%;padding:10px 12px;border:1.5px solid var(--gray-mid);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:14px;margin-bottom:16px;}
+.modal input:focus{outline:none;border-color:var(--green);}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;}
+.modal-err{color:var(--error);font-size:13px;margin-bottom:10px;display:none;}
+@media(max-width:520px){
+  .card-header,.card-body{padding:20px 18px;}
+  .field-row{flex-direction:column;gap:0;}
+  .attendee-grid{grid-template-columns:1fr;}
+  .page-wrap{margin-top:20px;}
+  .card-header h1{font-size:19px;}
+  .admin-actions{justify-content:flex-start;}
+}
+
+  /* ── DELETE PRODUCT BUTTON ── */
+  .btn-delete-product {
+    background: none;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .btn-delete-product:hover { background: #c0392b; color: #fff; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="data:image/png;base64,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" alt="NHI Group">
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('pt')">PT</button>
+  </div>
+</header>
+
+<div class="page-wrap">
+<div class="card">
+
+  <div class="card-header">
+    <h1 id="formTitle" 
+      data-es="Formulario de Cotización Técnica"
+      data-en="Technical Quotation Form"
+      data-pt="Formulário de Cotação Técnica">Formulario de Cotización Técnica</h1>
+    <p id="formSubtitle"
+      data-es="Completá los datos a continuación para que nuestro equipo pueda asesorarte correctamente."
+      data-en="Fill in the details below so our team can advise you correctly."
+      data-pt="Preencha os dados abaixo para que nossa equipe possa assessorá-lo corretamente.">Completá los datos a continuación para que nuestro equipo pueda asesorarte correctamente.</p>
+  </div>
+
+  <div class="card-body" id="formBody">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-labels">
+        <span class="prog-label active" id="lbl1" data-es="Datos del cliente" data-en="Client data" data-pt="Dados do cliente">Datos del cliente</span>
+        <span class="prog-label" id="lbl2" data-es="Especificaciones técnicas" data-en="Technical specs" data-pt="Especificações técnicas">Especificaciones técnicas</span>
+        <span class="prog-label" id="lbl3" data-es="Confirmación" data-en="Confirmation" data-pt="Confirmação">Confirmación</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar" style="width:33%"></div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 1 ══ -->
+    <div class="step-panel active" id="step1">
+      <div class="section-title" data-es="Datos del cliente" data-en="Client information" data-pt="Dados do cliente">Datos del cliente</div>
+
+      <div class="field" id="f-empresa">
+        <label><span data-es="Empresa" data-en="Company" data-pt="Empresa">Empresa</span><span class="req">*</span></label>
+        <input type="text" id="empresa" placeholder="Nombre de la empresa">
+        <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
+      </div>
+
+      <div class="field" id="f-contacto">
+        <label><span data-es="Nombre y Apellido" data-en="Full name" data-pt="Nome completo">Nombre y Apellido</span><span class="req">*</span></label>
+        <input type="text" id="contacto" placeholder="Nombre completo del responsable">
+        <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="f-email">
+          <label><span data-es="Correo electrónico" data-en="Email" data-pt="E-mail">Correo electrónico</span><span class="req">*</span></label>
+          <input type="email" id="email" placeholder="correo@empresa.com">
+          <span class="err-msg" data-es="Ingresá un email válido." data-en="Enter a valid email." data-pt="Informe um e-mail válido.">Ingresá un email válido.</span>
+        </div>
+        <div class="field" id="f-celular">
+          <label><span data-es="Celular" data-en="Phone" data-pt="Celular">Celular</span><span class="req">*</span></label>
+          <input type="tel" id="celular" placeholder="+54 9 11 0000-0000">
+          <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="goStep(2)" data-es="Continuar →" data-en="Continue →" data-pt="Continuar →">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 2 ══ -->
+    <div class="step-panel" id="step2">
+      <!-- Products container: JS will inject product blocks here -->
+      <div id="productsContainer"></div>
+
+      <!-- Add product button -->
+      <div class="add-product-wrap" id="addProductWrap">
+        <button class="btn-add-product" id="btnAddProduct" onclick="addProduct()"
+          data-es="+ Agregar otro producto al pedido"
+          data-en="+ Add another product to order"
+          data-pt="+ Adicionar outro produto ao pedido">+ Agregar otro producto al pedido</button>
+        
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goStep(1)" data-es="← Atrás" data-en="← Back" data-pt="← Voltar">← Atrás</button>
+        <button class="btn btn-primary" onclick="goStep(3)" data-es="Revisar y enviar →" data-en="Review and submit →" data-pt="Revisar e enviar →">Revisar y enviar →</button>
+      </div>
+    </div>
+
+    <!-- ══ STEP 3 ══ -->
+    <div class="step-panel" id="step3">
+      <div class="section-title" data-es="Revisión de datos" data-en="Data review" data-pt="Revisão dos dados">Revisión de datos</div>
+
+      <!-- Client review -->
+      <table class="review-table" id="reviewClientTable"></table>
+
+      <!-- Products review: injected by JS -->
+      <div id="reviewProductsContainer"></div>
+
+      <div class="section-title" style="margin-top:24px" data-es="¿Quién te atendió?" data-en="Who assisted you?" data-pt="Quem te atendeu?">¿Quién te atendió?</div>
+      <div class="field" id="f-asesor">
+        <div class="attendee-grid">
+          <label class="attendee-card" id="cardFacundo">
+            <input type="radio" name="asesor" value="Facundo" onchange="selectAsesor('Facundo')">
+            <span class="attendee-name">Facundo</span>
+          </label>
+          <label class="attendee-card" id="cardVeronica">
+            <input type="radio" name="asesor" value="Verónica" onchange="selectAsesor('Verónica')">
+            <span class="attendee-name">Verónica</span>
+          </label>
+          <label class="attendee-card" id="cardJohana">
+            <input type="radio" name="asesor" value="Johana" onchange="selectAsesor('Johana')">
+            <span class="attendee-name">Johana</span>
+          </label>
+        </div>
+        <span class="err-msg" id="asesorErr" style="display:none"
+          data-es="Seleccioná quién te atendió."
+          data-en="Select who assisted you."
+          data-pt="Selecione quem te atendeu.">Seleccioná quién te atendió.</span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goStep(2)" data-es="← Atrás" data-en="← Back" data-pt="← Voltar">← Atrás</button>
+        <button class="btn btn-primary" id="btnEnviar" onclick="submitForm()" data-es="Enviar consulta" data-en="Submit inquiry" data-pt="Enviar consulta">Enviar consulta</button>
+      </div>
+    </div>
+
+  </div><!-- /card-body -->
+
+  <!-- SUCCESS -->
+  <div id="successScreen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#3A6B47" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <h2 data-es="¡Consulta enviada!" data-en="Inquiry submitted!" data-pt="Consulta enviada!">¡Consulta enviada!</h2>
+    <p data-es="Gracias por completar el formulario. Un asesor de NHI Group se pondrá en contacto con vos a la brevedad para avanzar con tu cotización."
+       data-en="Thank you for completing the form. An NHI Group advisor will contact you shortly to proceed with your quote."
+       data-pt="Obrigado por preencher o formulário. Um assessor da NHI Group entrará em contato em breve para avançar com sua cotação.">Gracias por completar el formulario. Un asesor de NHI Group se pondrá en contacto con vos a la brevedad para avanzar con tu cotización.</p>
+    <button class="btn btn-primary" onclick="resetForm()"
+      data-es="Cargar nueva consulta" data-en="Submit new inquiry" data-pt="Nova consulta">Cargar nueva consulta</button>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel">
+    <div class="admin-header">
+      <h2 data-es="Panel de administración" data-en="Admin panel" data-pt="Painel de administração">Panel de administración</h2>
+      <div class="admin-actions">
+        <button class="btn btn-secondary" onclick="exportCSV()" style="font-size:13px;padding:7px 16px" data-es="Exportar CSV" data-en="Export CSV" data-pt="Exportar CSV">Exportar CSV</button>
+        <button class="btn btn-secondary" onclick="clearRecords()" style="font-size:13px;padding:7px 16px;border-color:#c0392b;color:#c0392b" data-es="Limpiar registros" data-en="Clear records" data-pt="Limpar registros">Limpiar registros</button>
+        <button class="btn btn-secondary" onclick="closeAdmin()" style="font-size:13px;padding:7px 16px" data-es="Cerrar" data-en="Close" data-pt="Fechar">Cerrar</button>
+      </div>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="adminTable">
+        <thead>
+          <tr>
+            <th data-es="Fecha/Hora" data-en="Date/Time" data-pt="Data/Hora">Fecha/Hora</th>
+            <th data-es="Empresa" data-en="Company" data-pt="Empresa">Empresa</th>
+            <th data-es="Contacto" data-en="Contact" data-pt="Contato">Contacto</th>
+            <th data-es="Productos" data-en="Products" data-pt="Produtos">Productos</th>
+            <th data-es="Asesor" data-en="Advisor" data-pt="Assessor">Asesor</th>
+            <th data-es="Detalle" data-en="Detail" data-pt="Detalhe">Detalle</th>
+          </tr>
+        </thead>
+        <tbody id="adminBody"></tbody>
+      </table>
+      <p id="adminEmpty" style="text-align:center;color:var(--text-light);padding:24px;display:none"
+        data-es="Sin registros aún." data-en="No records yet." data-pt="Sem registros ainda.">Sin registros aún.</p>
+    </div>
+  </div>
+
+</div><!-- /card -->
+</div><!-- /page-wrap -->
+
+<footer class="site-footer">
+  <span>© 2024 NHI Group — nhisa.com.ar</span>
+  <button class="admin-link" onclick="openAdminModal()"
+    data-es="Acceso interno" data-en="Internal access" data-pt="Acesso interno">Acceso interno</button>
+</footer>
+
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <h3 data-es="Acceso restringido" data-en="Restricted access" data-pt="Acesso restrito">Acceso restringido</h3>
+    <p data-es="Ingresá la contraseña para acceder al panel de administración."
+       data-en="Enter the password to access the admin panel."
+       data-pt="Digite a senha para acessar o painel de administração.">Ingresá la contraseña para acceder al panel de administración.</p>
+    <input type="password" id="adminPwd" placeholder="Contraseña" onkeydown="if(event.key==='Enter')checkAdmin()">
+    <div class="modal-err" id="pwdErr"
+      data-es="Contraseña incorrecta." data-en="Incorrect password." data-pt="Senha incorreta.">Contraseña incorrecta.</div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeAdminModal()" style="font-size:13px;padding:7px 16px"
+        data-es="Cancelar" data-en="Cancel" data-pt="Cancelar">Cancelar</button>
+      <button class="btn btn-primary" onclick="checkAdmin()" style="font-size:13px;padding:7px 16px"
+        data-es="Ingresar" data-en="Enter" data-pt="Entrar">Ingresar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'service_2mr2zgb';
+const EMAILJS_TEMPLATE_ID = 'template_fb28af3';
+const EMAILJS_PUBLIC_KEY  = '_sv5r10BYE14Ye7cU';
+const EMAILS = {'Facundo':'atc@nhisa.com.ar','Verónica':'vbenavidez@nhisa.com.ar','Johana':'compras@nhisa.com.ar'};
+const ADMIN_PWD = 'Nhisa.VZEA';
+const MAX_PRODUCTS = 5;
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentLang = 'es';
+let currentStep = 1;
+let selectedAsesor = '';
+// productIds: ordered list of product slot IDs (e.g. [1, 2, 3])
+// productIdCounter: monotonically increasing, never reused after deletion
+let productIds = [];
+let productIdCounter = 0;
+
+// ── LANGUAGE ─────────────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    if(b.textContent === lang.toUpperCase()) b.classList.add('active');
+  });
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if(el.tagName === 'OPTION') el.textContent = val;
+    else el.textContent = val;
+  });
+}
+
+// ── PRODUCT HTML GENERATOR ────────────────────────────────────────────────────
+// n = display number (1-based position), id = unique slot id
+function productHTML(displayNum, id) {
+  const isFirst = displayNum === 1;
+  const labelES = isFirst ? 'Especificaciones técnicas' : `Especificaciones técnicas ${displayNum}`;
+  const labelEN = isFirst ? 'Technical specifications' : `Technical specifications ${displayNum}`;
+  const labelPT = isFirst ? 'Especificações técnicas' : `Especificações técnicas ${displayNum}`;
+  const separator = !isFirst ? `<div class="product-separator"></div>` : '';
+  const deleteBtn = !isFirst
+    ? `<button class="btn-delete-product" onclick="deleteProduct(${id})" 
+         data-es="Eliminar producto" data-en="Remove product" data-pt="Remover produto"
+         title="Eliminar este producto">✕ Eliminar</button>`
+    : '';
+
+  return `${separator}
+<div class="product-block" id="productBlock${id}" data-product-id="${id}">
+  <div class="product-header">
+    <span class="product-label section-title" style="margin:0;padding:0;border:none"
+      data-es="${labelES}" data-en="${labelEN}" data-pt="${labelPT}">${labelES}</span>
+    ${deleteBtn}
+  </div>
+
+  <div class="field" id="f-p${id}-tipoManguera">
+    <label><span data-es="Tipo de manguera" data-en="Hose type" data-pt="Tipo de mangueira">Tipo de manguera</span><span class="req">*</span></label>
+    <select id="p${id}-tipoManguera">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="Manguera de caucho" data-es="Manguera de caucho" data-en="Rubber hose" data-pt="Mangueira de borracha">Manguera de caucho</option>
+      <option value="Manguera de PVC" data-es="Manguera de PVC" data-en="PVC hose" data-pt="Mangueira de PVC">Manguera de PVC</option>
+      <option value="Manguera Composite" data-es="Manguera Composite" data-en="Composite hose" data-pt="Mangueira Composite">Manguera Composite</option>
+      <option value="Manguera Rotary API" data-es="Manguera Rotary API" data-en="Rotary API hose" data-pt="Mangueira Rotary API">Manguera Rotary API</option>
+      <option value="Manguera contra incendios" data-es="Manguera contra incendios" data-en="Fire hose" data-pt="Mangueira de incêndio">Manguera contra incendios</option>
+      <option value="Mangueras especiales" data-es="Mangueras especiales" data-en="Special hoses" data-pt="Mangueiras especiais">Mangueras especiales</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+  </div>
+
+  <div class="field" id="f-p${id}-rubro">
+    <label><span data-es="Rubro" data-en="Industry" data-pt="Setor">Rubro</span><span class="req">*</span></label>
+    <select id="p${id}-rubro">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="Oil &amp; Gas">Oil &amp; Gas</option>
+      <option value="Petroquímica" data-es="Petroquímica" data-en="Petrochemical" data-pt="Petroquímica">Petroquímica</option>
+      <option value="Minería" data-es="Minería" data-en="Mining" data-pt="Mineração">Minería</option>
+      <option value="Alimenticia" data-es="Alimenticia" data-en="Food &amp; Beverage" data-pt="Alimentícia">Alimenticia</option>
+      <option value="Construcción" data-es="Construcción" data-en="Construction" data-pt="Construção">Construcción</option>
+      <option value="Saneamiento" data-es="Saneamiento" data-en="Sanitation" data-pt="Saneamento">Saneamiento</option>
+      <option value="Siderurgia" data-es="Siderurgia" data-en="Steel industry" data-pt="Siderurgia">Siderurgia</option>
+      <option value="Agroindustria" data-es="Agroindustria" data-en="Agroindustry" data-pt="Agroindústria">Agroindustria</option>
+      <option value="Hidráulica" data-es="Hidráulica" data-en="Hydraulics" data-pt="Hidráulica">Hidráulica</option>
+      <option value="Red contra incendio" data-es="Red contra incendio" data-en="Fire protection network" data-pt="Rede de incêndio">Red contra incendio</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+  </div>
+
+  <div class="field" id="f-p${id}-aplicacion">
+    <label><span data-es="Aplicación o uso" data-en="Application or use" data-pt="Aplicação ou uso">Aplicación o uso</span><span class="req">*</span></label>
+    <textarea id="p${id}-aplicacion" placeholder="Describa la aplicación específica o uso previsto de la manguera" rows="3"></textarea>
+    <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
+  </div>
+
+  <div class="field" id="f-p${id}-servicio">
+    <label><span data-es="Servicio" data-en="Service type" data-pt="Tipo de serviço">Servicio</span><span class="req">*</span></label>
+    <select id="p${id}-servicio">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="Expelente" data-es="Expelente" data-en="Discharge" data-pt="Descarga">Expelente</option>
+      <option value="Aspirante" data-es="Aspirante" data-en="Suction" data-pt="Sucção">Aspirante</option>
+      <option value="Aspirante y expelente" data-es="Aspirante y expelente" data-en="Suction and discharge" data-pt="Sucção e descarga">Aspirante y expelente</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+  </div>
+
+  <div class="field" id="f-p${id}-diametro">
+    <label><span data-es="Diámetro" data-en="Diameter" data-pt="Diâmetro">Diámetro</span><span class="req">*</span></label>
+    <select id="p${id}-diametro" onchange="checkDiametro(${id})">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value='1/8" - 3 mm'>1/8" - 3 mm</option>
+      <option value='1/4" - 6 mm'>1/4" - 6 mm</option>
+      <option value='3/8" - 10 mm'>3/8" - 10 mm</option>
+      <option value='1/2" - 13 mm'>1/2" - 13 mm</option>
+      <option value='3/4" - 19 mm'>3/4" - 19 mm</option>
+      <option value='1" - 25 mm'>1" - 25 mm</option>
+      <option value='1 1/4" - 32 mm'>1 1/4" - 32 mm</option>
+      <option value='1 1/2" - 38 mm'>1 1/2" - 38 mm</option>
+      <option value='2" - 51 mm'>2" - 51 mm</option>
+      <option value='2 1/2" - 64 mm'>2 1/2" - 64 mm</option>
+      <option value='3" - 76 mm'>3" - 76 mm</option>
+      <option value='3 1/2" - 89 mm'>3 1/2" - 89 mm</option>
+      <option value='4" - 102 mm'>4" - 102 mm</option>
+      <option value='5" - 127 mm'>5" - 127 mm</option>
+      <option value='6" - 152 mm'>6" - 152 mm</option>
+      <option value='8" - 203 mm'>8" - 203 mm</option>
+      <option value='10" - 254 mm'>10" - 254 mm</option>
+      <option value='12" - 305 mm'>12" - 305 mm</option>
+      <option value='14" - 356 mm'>14" - 356 mm</option>
+      <option value='16" - 406 mm'>16" - 406 mm</option>
+      <option value='Mayores a 16"' data-es='Mayores a 16"' data-en='Greater than 16"' data-pt='Maiores que 16"'>Mayores a 16"</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+    <div class="sub-field" id="sub-p${id}-diametro">
+      <label data-es="Especificá el diámetro:" data-en="Specify the diameter:" data-pt="Especifique o diâmetro:">Especificá el diámetro:</label>
+      <input type="text" id="p${id}-diametroCustom" placeholder='Ej: 18" - 450 mm'>
+    </div>
+  </div>
+
+  <div class="field" id="f-p${id}-fluido">
+    <label><span data-es="Fluido" data-en="Fluid" data-pt="Fluido">Fluido</span><span class="req">*</span></label>
+    <select id="p${id}-fluido" onchange="checkFluido(${id})">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="Agua" data-es="Agua" data-en="Water" data-pt="Água">Agua</option>
+      <option value="Hidrocarburo" data-es="Hidrocarburo" data-en="Hydrocarbon" data-pt="Hidrocarboneto">Hidrocarburo</option>
+      <option value="Abrasión" data-es="Abrasión" data-en="Abrasion" data-pt="Abrasão">Abrasión</option>
+      <option value="Vapor" data-es="Vapor" data-en="Steam" data-pt="Vapor">Vapor</option>
+      <option value="Químicos" data-es="Químicos" data-en="Chemicals" data-pt="Químicos">Químicos</option>
+      <option value="Alimentos" data-es="Alimentos" data-en="Food" data-pt="Alimentos">Alimentos</option>
+      <option value="Gas" data-es="Gas" data-en="Gas" data-pt="Gás">Gas</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+    <div class="sub-field" id="sub-p${id}-quimicos">
+      <label data-es="Porcentaje de concentración del químico:" data-en="Chemical concentration:" data-pt="Concentração do químico:">Porcentaje de concentración del químico:</label>
+      <select id="p${id}-concQuimico">
+        <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+        <option value="&lt;10%">&lt;10%</option>
+        <option value="10–25%">10–25%</option>
+        <option value="25–50%">25–50%</option>
+        <option value="50–75%">50–75%</option>
+        <option value="&gt;75%">&gt;75%</option>
+        <option value="No especificado" data-es="No especificado" data-en="Not specified" data-pt="Não especificado">No especificado</option>
+      </select>
+    </div>
+    <div class="sub-field" id="sub-p${id}-hidrocarburo">
+      <label data-es="Porcentaje de aromaticidad:" data-en="Aromaticity percentage:" data-pt="Percentual de aromaticidade:">Porcentaje de aromaticidad:</label>
+      <select id="p${id}-aromaticidad">
+        <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+        <option value="&lt;10%">&lt;10%</option>
+        <option value="10–20%">10–20%</option>
+        <option value="20–40%">20–40%</option>
+        <option value="&gt;40%">&gt;40%</option>
+        <option value="No especificado" data-es="No especificado" data-en="Not specified" data-pt="Não especificado">No especificado</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field" id="f-p${id}-presion">
+    <label><span data-es="Presión de trabajo (BAR)" data-en="Working pressure (BAR)" data-pt="Pressão de trabalho (BAR)">Presión de trabajo (BAR)</span><span class="req">*</span></label>
+    <select id="p${id}-presion" onchange="checkPresion(${id})">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="5 BAR">5</option><option value="10 BAR">10</option>
+      <option value="15 BAR">15</option><option value="20 BAR">20</option>
+      <option value="30 BAR">30</option><option value="50 BAR">50</option>
+      <option value="100 BAR">100</option><option value="200 BAR">200</option>
+      <option value="350 BAR">350</option><option value="700 BAR">700</option>
+      <option value="Otro" data-es="Otro / Especificar" data-en="Other / Specify" data-pt="Outro / Especificar">Otro / Especificar</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+    <div class="sub-field" id="sub-p${id}-presion">
+      <label data-es="Especificá la presión:" data-en="Specify the pressure:" data-pt="Especifique a pressão:">Especificá la presión:</label>
+      <input type="text" id="p${id}-presionCustom" placeholder="Ej: 450 BAR">
+    </div>
+  </div>
+
+  <div class="field" id="f-p${id}-temperatura">
+    <label><span data-es="Rango de temperatura (°C)" data-en="Temperature range (°C)" data-pt="Faixa de temperatura (°C)">Rango de temperatura (°C)</span><span class="req">*</span></label>
+    <select id="p${id}-temperatura" onchange="checkTemperatura(${id})">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="Ambiente" data-es="Ambiente" data-en="Ambient" data-pt="Ambiente">Ambiente</option>
+      <option value="-30 a +100°C">-30 a +100°C</option>
+      <option value="-30 a +120°C">-30 a +120°C</option>
+      <option value="-30 a +150°C">-30 a +150°C</option>
+      <option value="-30 a +180°C">-30 a +180°C</option>
+      <option value="-30 a +230°C">-30 a +230°C</option>
+      <option value="-50 a +80°C">-50 a +80°C</option>
+      <option value="-50 a +120°C">-50 a +120°C</option>
+      <option value="Otro" data-es="Otro / Especificar" data-en="Other / Specify" data-pt="Outro / Especificar">Otro / Especificar</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+    <div class="sub-field" id="sub-p${id}-temperatura">
+      <label data-es="Especificá el rango:" data-en="Specify the range:" data-pt="Especifique a faixa:">Especificá el rango:</label>
+      <input type="text" id="p${id}-temperaturaCustom" placeholder="Ej: -60 a +200°C">
+    </div>
+  </div>
+
+  <div class="field" id="f-p${id}-cantidad">
+    <label><span data-es="Cantidad" data-en="Quantity" data-pt="Quantidade">Cantidad</span><span class="req">*</span></label>
+    <input type="text" id="p${id}-cantidad" placeholder="Ej: 2 tramos de 20 metros">
+    <div class="hint" data-es="Especificá la unidad: metros, tramos o unidades." data-en="Specify the unit: meters, sections, or units." data-pt="Especifique a unidade: metros, trechos ou unidades.">Especificá la unidad: metros, tramos o unidades.</div>
+    <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
+  </div>
+
+  <div class="field">
+    <label><span data-es="Uniones" data-en="Fittings" data-pt="Conexões">Uniones</span><span class="opt" data-es="(opcional)" data-en="(optional)" data-pt="(opcional)">(opcional)</span></label>
+    <div class="field-row" style="gap:10px;margin-bottom:0">
+      <input type="number" id="p${id}-unionesCant" placeholder="Cant." style="width:90px;flex:0 0 90px">
+      <input type="text" id="p${id}-unionesTipo" placeholder="Tipo de acople / material">
+    </div>
+  </div>
+
+  <div class="field" id="f-p${id}-norma">
+    <label><span data-es="Norma técnica" data-en="Technical standard" data-pt="Norma técnica">Norma técnica</span><span class="req">*</span></label>
+    <select id="p${id}-norma">
+      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+      <option value="ISO">ISO</option>
+      <option value="API">API</option>
+      <option value="EN BS">EN BS</option>
+      <option value="SAE">SAE</option>
+      <option value="FDA">FDA</option>
+    </select>
+    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+  </div>
+
+  <div class="field">
+    <label><span data-es="Observaciones" data-en="Additional notes" data-pt="Observações">Observaciones</span><span class="opt" data-es="(opcional)" data-en="(optional)" data-pt="(opcional)">(opcional)</span></label>
+    <textarea id="p${id}-observaciones" placeholder="Información adicional relevante para la cotización" rows="3"></textarea>
+  </div>
+</div>`;
+}
+
+// ── KEY: Save values from DOM into a data object ──────────────────────────────
+function saveProductValues(id) {
+  const fields = ['tipoManguera','rubro','aplicacion','servicio','diametro',
+    'diametroCustom','fluido','concQuimico','aromaticidad','presion',
+    'presionCustom','temperatura','temperaturaCustom','cantidad',
+    'unionesCant','unionesTipo','norma','observaciones'];
+  const data = {};
+  fields.forEach(f => {
+    const el = document.getElementById('p' + id + '-' + f);
+    if(el) data[f] = el.value;
+  });
+  // Save sub-field visibility
+  ['diametro','quimicos','hidrocarburo','presion','temperatura'].forEach(sf => {
+    const el = document.getElementById('sub-p' + id + '-' + sf);
+    if(el) data['_vis_' + sf] = el.classList.contains('visible');
+  });
+  return data;
+}
+
+// ── KEY: Save ALL products' values before any DOM manipulation ────────────────
+function saveAllProductValues() {
+  const saved = {};
+  productIds.forEach(id => { saved[id] = saveProductValues(id); });
+  return saved;
+}
+
+// ── KEY: Restore values into DOM after re-render ──────────────────────────────
+function restoreProductValues(id, data) {
+  if(!data) return;
+  const fields = ['tipoManguera','rubro','aplicacion','servicio','diametro',
+    'diametroCustom','fluido','concQuimico','aromaticidad','presion',
+    'presionCustom','temperatura','temperaturaCustom','cantidad',
+    'unionesCant','unionesTipo','norma','observaciones'];
+  fields.forEach(f => {
+    const el = document.getElementById('p' + id + '-' + f);
+    if(el && data[f] !== undefined) el.value = data[f];
+  });
+  // Restore sub-field visibility
+  ['diametro','quimicos','hidrocarburo','presion','temperatura'].forEach(sf => {
+    const el = document.getElementById('sub-p' + id + '-' + sf);
+    if(el && data['_vis_' + sf]) el.classList.add('visible');
+    else if(el) el.classList.remove('visible');
+  });
+}
+
+// ── RENDER: rebuild products container without losing data ────────────────────
+function renderProducts(savedValues) {
+  const container = document.getElementById('productsContainer');
+  // Save scroll position
+  const scrollY = window.scrollY;
+  // Rebuild HTML
+  let html = '';
+  productIds.forEach((id, idx) => {
+    html += productHTML(idx + 1, id);
+  });
+  container.innerHTML = html;
+  // Restore all values
+  productIds.forEach(id => {
+    restoreProductValues(id, savedValues[id]);
+  });
+  // Re-apply language if not Spanish
+  if(currentLang !== 'es') setLang(currentLang);
+  // Update add button visibility
+  updateAddButton();
+  // Restore scroll
+  window.scrollTo(0, scrollY);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function initProducts() {
+  productIds = [];
+  productIdCounter = 0;
+  document.getElementById('productsContainer').innerHTML = '';
+  addProductSlot(); // add first product without validation
+}
+
+// ── ADD PRODUCT ───────────────────────────────────────────────────────────────
+function addProduct() {
+  if(productIds.length >= MAX_PRODUCTS) return;
+  // Validate the last product before adding
+  const lastId = productIds[productIds.length - 1];
+  if(!validateProductById(lastId)) {
+    const firstInvalid = document.querySelector('#productBlock' + lastId + ' .field.invalid');
+    if(firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  // Save current DOM values BEFORE touching the DOM
+  const saved = saveAllProductValues();
+  // Add new slot
+  addProductSlot(saved);
+}
+
+function addProductSlot(savedValues) {
+  productIdCounter++;
+  const newId = productIdCounter;
+  const saved = savedValues || {};
+  productIds.push(newId);
+  // Append only the new product block (no rebuild of existing ones)
+  const container = document.getElementById('productsContainer');
+  const displayNum = productIds.length;
+  container.insertAdjacentHTML('beforeend', productHTML(displayNum, newId));
+  // Apply lang to new block only
+  if(currentLang !== 'es') {
+    const block = document.getElementById('productBlock' + newId);
+    if(block) block.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+      const val = el.getAttribute('data-' + currentLang);
+      if(el.tagName === 'OPTION') el.textContent = val;
+      else el.textContent = val;
+    });
+  }
+  updateAddButton();
+  // Scroll to new block
+  const newBlock = document.getElementById('productBlock' + newId);
+  if(newBlock && productIds.length > 1) {
+    setTimeout(() => newBlock.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+  }
+}
+
+// ── DELETE PRODUCT ────────────────────────────────────────────────────────────
+function deleteProduct(id) {
+  if(productIds.length <= 1) return; // Never delete the only product
+  // Save ALL current DOM values before any DOM change
+  const saved = saveAllProductValues();
+  // Remove from list
+  productIds = productIds.filter(pid => pid !== id);
+  // Remove DOM element directly — no rebuild needed, preserves all others
+  const block = document.getElementById('productBlock' + id);
+  if(block) {
+    // Also remove the separator that precedes it if it exists
+    const prev = block.previousElementSibling;
+    if(prev && prev.classList.contains('product-separator')) prev.remove();
+    block.remove();
+  }
+  // Rebuild to update display numbers and delete buttons correctly
+  const remaining = saveAllProductValues(); // re-read from updated DOM
+  // Merge: use saved for IDs still in productIds (in case DOM was stale)
+  const mergedSaved = {};
+  productIds.forEach(pid => { mergedSaved[pid] = saved[pid] || remaining[pid] || {}; });
+  renderProducts(mergedSaved);
+  updateAddButton();
+}
+
+// ── UPDATE ADD BUTTON ─────────────────────────────────────────────────────────
+function updateAddButton() {
+  const wrap = document.getElementById('addProductWrap');
+  if(!wrap) return;
+  if(productIds.length >= MAX_PRODUCTS) {
+    wrap.style.display = 'none';
+  } else {
+    wrap.style.display = 'block';
+  }
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goStep(n) {
+  if(n > currentStep && !validateStep(currentStep)) return;
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step' + currentStep).classList.add('active');
+  ['lbl1','lbl2','lbl3'].forEach((id, i) => {
+    document.getElementById(id).classList.toggle('active', i + 1 === n);
+  });
+  document.getElementById('progressBar').style.width = (n / 3 * 100) + '%';
+  if(n === 3) buildReview();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ── VALIDATION ────────────────────────────────────────────────────────────────
+function validateStep(step) {
+  if(step === 1) {
+    return !!(validateField('empresa') & validateEmail() & validateField('celular') & validateField('contacto'));
+  }
+  if(step === 2) {
+    let ok = true;
+    productIds.forEach(id => { if(!validateProductById(id)) ok = false; });
+    return ok;
+  }
+  return true;
+}
+
+function validateProductById(id) {
+  const selects = ['tipoManguera','rubro','servicio','diametro','fluido','presion','temperatura','norma'];
+  const texts   = ['aplicacion','cantidad'];
+  let ok = true;
+  selects.forEach(f => { if(!validateProductSelect(id, f)) ok = false; });
+  texts.forEach(f   => { if(!validateProductField(id, f))  ok = false; });
+  return ok;
+}
+
+function validateProductField(id, field) {
+  const el   = document.getElementById('p' + id + '-' + field);
+  const wrap = document.getElementById('f-p' + id + '-' + field);
+  if(!el) return true;
+  const valid = el.value.trim() !== '';
+  if(wrap) wrap.classList.toggle('invalid', !valid);
+  return valid;
+}
+
+function validateProductSelect(id, field) {
+  const el   = document.getElementById('p' + id + '-' + field);
+  const wrap = document.getElementById('f-p' + id + '-' + field);
+  if(!el) return true;
+  const valid = el.value !== '';
+  if(wrap) wrap.classList.toggle('invalid', !valid);
+  return valid;
+}
+
+function validateField(id) {
+  const el   = document.getElementById(id);
+  const wrap = document.getElementById('f-' + id) || (el && el.closest('.field'));
+  if(!el) return true;
+  const valid = el.value.trim() !== '';
+  if(wrap) wrap.classList.toggle('invalid', !valid);
+  return valid;
+}
+
+function validateEmail() {
+  const el   = document.getElementById('email');
+  const wrap = document.getElementById('f-email');
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+  wrap.classList.toggle('invalid', !valid);
+  return valid;
+}
+
+// ── CONDITIONALS ──────────────────────────────────────────────────────────────
+function checkDiametro(id) {
+  const v = document.getElementById('p' + id + '-diametro').value;
+  document.getElementById('sub-p' + id + '-diametro').classList.toggle('visible', v === 'Mayores a 16"');
+}
+function checkFluido(id) {
+  const v = document.getElementById('p' + id + '-fluido').value;
+  document.getElementById('sub-p' + id + '-quimicos').classList.toggle('visible', v === 'Químicos');
+  document.getElementById('sub-p' + id + '-hidrocarburo').classList.toggle('visible', v === 'Hidrocarburo');
+}
+function checkPresion(id) {
+  document.getElementById('sub-p' + id + '-presion').classList.toggle('visible',
+    document.getElementById('p' + id + '-presion').value === 'Otro');
+}
+function checkTemperatura(id) {
+  document.getElementById('sub-p' + id + '-temperatura').classList.toggle('visible',
+    document.getElementById('p' + id + '-temperatura').value === 'Otro');
+}
+
+// ── ASESOR ────────────────────────────────────────────────────────────────────
+function selectAsesor(name) {
+  selectedAsesor = name;
+  ['Facundo','Veronica','Johana'].forEach(n => document.getElementById('card' + n).classList.remove('selected'));
+  document.getElementById('card' + name.replace('ó','o')).classList.add('selected');
+  document.getElementById('asesorErr').style.display = 'none';
+}
+
+// ── GET VALUE HELPER ──────────────────────────────────────────────────────────
+function gv(id, fb) {
+  const el = document.getElementById(id);
+  return el ? (el.value.trim() || (fb !== undefined ? fb : '')) : (fb !== undefined ? fb : '');
+}
+
+// ── GET PRODUCT DATA ──────────────────────────────────────────────────────────
+function getProductData(id) {
+  const diametro = gv('p' + id + '-diametro') === 'Mayores a 16"'
+    ? 'Mayores a 16" — ' + gv('p' + id + '-diametroCustom')
+    : gv('p' + id + '-diametro');
+  const presion = gv('p' + id + '-presion') === 'Otro'
+    ? 'Otro: ' + gv('p' + id + '-presionCustom')
+    : gv('p' + id + '-presion');
+  const temperatura = gv('p' + id + '-temperatura') === 'Otro'
+    ? 'Otro: ' + gv('p' + id + '-temperaturaCustom')
+    : gv('p' + id + '-temperatura');
+  let fluido = gv('p' + id + '-fluido');
+  if(fluido === 'Químicos' && gv('p' + id + '-concQuimico'))
+    fluido += ' (Conc. ' + gv('p' + id + '-concQuimico') + ')';
+  if(fluido === 'Hidrocarburo' && gv('p' + id + '-aromaticidad'))
+    fluido += ' (Arom. ' + gv('p' + id + '-aromaticidad') + ')';
+  return [
+    ['Tipo de manguera', gv('p' + id + '-tipoManguera')],
+    ['Rubro',            gv('p' + id + '-rubro')],
+    ['Aplicación / Uso', gv('p' + id + '-aplicacion')],
+    ['Servicio',         gv('p' + id + '-servicio')],
+    ['Diámetro',         diametro],
+    ['Fluido',           fluido],
+    ['Presión',          presion],
+    ['Temperatura',      temperatura],
+    ['Cantidad',         gv('p' + id + '-cantidad')],
+    ['Uniones',          (gv('p' + id + '-unionesCant') + ' ' + gv('p' + id + '-unionesTipo')).trim() || '—'],
+    ['Norma',            gv('p' + id + '-norma')],
+    ['Observaciones',    gv('p' + id + '-observaciones') || '—'],
+  ];
+}
+
+// ── BUILD REVIEW ──────────────────────────────────────────────────────────────
+function buildReview() {
+  // Client table
+  const clientRows = [
+    ['Empresa',  gv('empresa')],
+    ['Contacto', gv('contacto')],
+    ['Email',    gv('email')],
+    ['Celular',  gv('celular')],
+  ];
+  let ch = '';
+  clientRows.forEach(([k, v]) => ch += `<tr><td>${k}</td><td>${v}</td></tr>`);
+  document.getElementById('reviewClientTable').innerHTML = ch;
+
+  // Products
+  const pc = document.getElementById('reviewProductsContainer');
+  pc.innerHTML = '';
+  const labelES = ['Especificaciones técnicas','Especificaciones técnicas 2',
+    'Especificaciones técnicas 3','Especificaciones técnicas 4','Especificaciones técnicas 5'];
+  productIds.forEach((id, idx) => {
+    const rows = getProductData(id);
+    let rh = `<div class="review-product-title">${labelES[idx]}</div>`;
+    rh += `<table class="review-table" style="margin-bottom:8px;">`;
+    rows.forEach(([k, v]) => rh += `<tr><td>${k}</td><td>${v}</td></tr>`);
+    rh += `</table>`;
+    pc.insertAdjacentHTML('beforeend', rh);
+  });
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+function submitForm() {
+  if(!selectedAsesor) {
+    document.getElementById('asesorErr').style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('btnEnviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const now = new Date();
+  const fecha = now.toLocaleString('es-AR', {timeZone: 'America/Argentina/Buenos_Aires'});
+
+  const clientRows = [
+    ['Fecha y hora', fecha],
+    ['Empresa',  gv('empresa')],
+    ['Contacto', gv('contacto')],
+    ['Email',    gv('email')],
+    ['Celular',  gv('celular')],
+    ['Atendido por', selectedAsesor],
+  ];
+
+  let allRows = [...clientRows];
+  productIds.forEach((id, idx) => {
+    allRows.push(['── PRODUCTO ' + (idx + 1) + ' ──', '']);
+    allRows.push(...getProductData(id));
+  });
+
+  let tableHtml = `<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;">
+    <thead><tr style="background:#3A6B47;color:#fff;">
+      <th style="padding:10px 14px;text-align:left;width:38%;">Campo</th>
+      <th style="padding:10px 14px;text-align:left;">Valor</th>
+    </tr></thead><tbody>`;
+  allRows.forEach(([k, v], i) => {
+    const isProd = k.startsWith('──');
+    const bg    = isProd ? '#3A6B47' : (i % 2 === 0 ? '#f5f5f6' : '#eaf2ec');
+    const kc    = isProd ? '#fff' : '#6b6b72';
+    const vc    = isProd ? '#fff' : '#2a2a2e';
+    const fw    = isProd ? '700' : '500';
+    tableHtml += `<tr style="background:${bg};">
+      <td style="padding:9px 14px;font-weight:${fw};color:${kc};">${k}</td>
+      <td style="padding:9px 14px;color:${vc};">${v}</td>
+    </tr>`;
+  });
+  tableHtml += `</tbody></table>`;
+
+  const templateParams = {
+    to_email: EMAILS[selectedAsesor],
+    empresa:  gv('empresa'),
+    tipo_manguera: gv('p' + productIds[0] + '-tipoManguera'),
+    asesor:   selectedAsesor,
+    message:  tableHtml,
+  };
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => {
+      saveRecord({
+        fecha, empresa: gv('empresa'), contacto: gv('contacto'),
+        tipoManguera: gv('p' + productIds[0] + '-tipoManguera'),
+        asesor: selectedAsesor, productos: productIds.length, all: allRows
+      });
+      document.getElementById('formBody').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    })
+    .catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Enviar consulta';
+      alert('Error al enviar. Por favor intentá de nuevo.');
+    });
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function resetForm() {
+  selectedAsesor = '';
+  document.querySelectorAll('.attendee-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('formBody').style.display = 'block';
+  ['empresa','contacto','email','celular'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.querySelectorAll('#step1 .field').forEach(el => el.classList.remove('invalid'));
+  initProducts();
+  goStep(1);
+}
+
+// ── LOCAL STORAGE ─────────────────────────────────────────────────────────────
+function saveRecord(rec) {
+  const records = JSON.parse(localStorage.getItem('nhi_records') || '[]');
+  records.unshift(rec);
+  localStorage.setItem('nhi_records', JSON.stringify(records));
+}
+function loadRecords() { return JSON.parse(localStorage.getItem('nhi_records') || '[]'); }
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+function openAdminModal() {
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminPwd').value = '';
+  document.getElementById('pwdErr').style.display = 'none';
+  setTimeout(() => document.getElementById('adminPwd').focus(), 100);
+}
+function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
+function checkAdmin() {
+  if(document.getElementById('adminPwd').value === ADMIN_PWD) { closeAdminModal(); showAdmin(); }
+  else document.getElementById('pwdErr').style.display = 'block';
+}
+function showAdmin() {
+  document.getElementById('formBody').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  renderAdminTable();
+}
+function closeAdmin() {
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('formBody').style.display = 'block';
+}
+function renderAdminTable() {
+  const records = loadRecords();
+  const tbody = document.getElementById('adminBody');
+  const empty = document.getElementById('adminEmpty');
+  tbody.innerHTML = '';
+  if(!records.length) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  records.forEach((r, i) => {
+    const did = 'detail-' + i;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.fecha}</td>
+      <td>${r.empresa}</td>
+      <td>${r.contacto}</td>
+      <td>${r.productos || 1} prod.</td>
+      <td>${r.asesor}</td>
+      <td>
+        <button class="detail-btn" onclick="toggleDetail('${did}')">Ver</button>
+        <div class="detail-panel" id="${did}">
+          ${(r.all || []).map(([k, v]) => `<b>${k}:</b> ${v}<br>`).join('')}
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+function toggleDetail(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+function exportCSV() {
+  const records = loadRecords();
+  if(!records.length) { alert('Sin registros para exportar.'); return; }
+  const headers = ['Fecha','Empresa','Contacto','Productos','Asesor','Detalle'];
+  const rows = records.map(r => {
+    const detail = (r.all || []).map(([k, v]) => k + ': ' + v).join(' | ');
+    return [r.fecha, r.empresa, r.contacto, r.productos || 1, r.asesor, detail]
+      .map(v => `"${String(v).replace(/"/g, '""')}"`);
+  });
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'NHI_consultas_' + new Date().toISOString().slice(0, 10) + '.csv';
+  a.click();
+}
+function clearRecords() {
+  if(!confirm('¿Limpiar todos los registros? Esta acción no se puede deshacer.')) return;
+  if(!confirm('Confirmación final: ¿estás seguro?')) return;
+  localStorage.removeItem('nhi_records');
+  renderAdminTable();
+}
+
+// ── START ─────────────────────────────────────────────────────────────────────
+initProducts();
+</script>
+</body>
+</html>
