@@ -81,7 +81,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
 .review-product-title{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin:20px 0 8px;padding:8px 12px;background:var(--green-light);border-radius:var(--radius);border-left:3px solid var(--green);}
 .review-product-title:first-child{margin-top:0;}
 /* ATTENDEE CARDS */
-.attendee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+.attendee-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px;}
 .attendee-card{border:2px solid var(--gray-mid);border-radius:8px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .15s;}
 .attendee-card:hover{border-color:var(--green);background:var(--green-light);}
 .attendee-card.selected{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 3px rgba(58,107,71,.15);}
@@ -119,7 +119,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
 @media(max-width:520px){
   .card-header,.card-body{padding:20px 18px;}
   .field-row{flex-direction:column;gap:0;}
-  .attendee-grid{grid-template-columns:1fr;}
+  .attendee-grid{grid-template-columns:repeat(2,1fr);}
   .page-wrap{margin-top:20px;}
   .card-header h1{font-size:19px;}
   .admin-actions{justify-content:flex-start;}
@@ -140,6 +140,42 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
     white-space: nowrap;
   }
   .btn-delete-product:hover { background: #c0392b; color: #fff; }
+
+  /* ── LANGUAGE FLAGS ── */
+  .lang-btn { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; line-height:1; }
+  .lang-flag { width:16px; height:11px; display:block; border-radius:1px; box-shadow:0 0 0 1px rgba(0,0,0,.10); }
+
+  /* ── LABEL NOTE (aclaracion junto al titulo) ── */
+  .field label .note { color: var(--text-light); font-weight: 400; font-size: 12px; margin-left: 6px; }
+
+  /* ── SUB-FIELD ERROR ── */
+  .sub-field label.mt { margin-top: 12px; }
+  .sub-err { font-size: 12px; color: var(--error); margin-top: 8px; display: none; }
+  .sub-field.invalid .sub-err { display: block; }
+  .sub-field.invalid select, .sub-field.invalid input { border-color: var(--error); }
+
+  /* ── TERMINALES O UNIONES ── */
+  .endpoint-block { display:flex; align-items:flex-start; gap:12px; background:var(--gray-light); border:1px solid var(--gray-mid); border-radius:var(--radius); padding:12px; margin-bottom:10px; }
+  .endpoint-title { flex:0 0 84px; font-size:13px; font-weight:600; color:var(--text); padding-top:26px; }
+  .endpoint-selects { flex:1; min-width:0; display:grid; grid-template-columns:1fr 1fr 1.25fr; gap:8px; }
+  .term-col { min-width:0; }
+  .term-label { display:block; font-size:11px; font-weight:500; color:var(--text-light); margin-bottom:4px; }
+  .field .term-col select { font-size:13px; padding:9px 10px; padding-right:30px; }
+  .field .term-col select:disabled { background-color:#ebebed; color:var(--text-light); cursor:not-allowed; }
+  .field .term-col select.na:disabled { background-color:var(--green-light); color:var(--green); border-color:var(--green-mid); }
+  .term-other { display:none; margin-top:8px; }
+  .term-other.visible { display:block; }
+  .term-other label { display:block; font-size:11px; font-weight:500; color:var(--text-light); margin-bottom:4px; }
+  .field .term-other input { font-size:13px; padding:9px 10px; }
+  .term-col.invalid select, .term-col.invalid input { border-color: var(--error); }
+  .term-err { font-size:12px; color:var(--error); margin-top:2px; display:none; }
+  .term-err.show { display:block; }
+
+  @media (max-width: 640px) {
+    .endpoint-block { flex-direction:column; gap:8px; padding:12px 10px; }
+    .endpoint-title { flex:none; padding-top:0; }
+    .endpoint-selects { grid-template-columns:1fr; gap:10px; width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -149,9 +185,9 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
     <img src="data:image/png;base64,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" alt="NHI Group">
   </div>
   <div class="lang-switcher">
-    <button class="lang-btn active" onclick="setLang('es')">ES</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('pt')">PT</button>
+    <button class="lang-btn active" onclick="setLang('es')">ES<svg class="lang-flag" viewBox="0 0 6 4" aria-hidden="true"><rect width="6" height="4" fill="#c60b1e"/><rect y="1" width="6" height="2" fill="#ffc400"/></svg></button>
+    <button class="lang-btn" onclick="setLang('en')">EN<svg class="lang-flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="ukFlagClip"><path d="M0 0h60v30H0z"/></clipPath><g clip-path="url(#ukFlagClip)"><path d="M0 0h60v30H0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
+    <button class="lang-btn" onclick="setLang('pt')">PT<svg class="lang-flag" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" fill="#009b3a"/><path d="M14 2.6L25.4 10 14 17.4 2.6 10z" fill="#fedf00"/><circle cx="14" cy="10" r="4.1" fill="#002776"/></svg></button>
   </div>
 </header>
 
@@ -263,6 +299,10 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
             <input type="radio" name="asesor" value="Johana" onchange="selectAsesor('Johana')">
             <span class="attendee-name">Johana</span>
           </label>
+          <label class="attendee-card" id="cardDaniel">
+            <input type="radio" name="asesor" value="Daniel" onchange="selectAsesor('Daniel')">
+            <span class="attendee-name">Daniel</span>
+          </label>
         </div>
         <span class="err-msg" id="asesorErr" style="display:none"
           data-es="Seleccioná quién te atendió."
@@ -354,7 +394,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
 const EMAILJS_SERVICE_ID  = 'service_2mr2zgb';
 const EMAILJS_TEMPLATE_ID = 'template_fb28af3';
 const EMAILJS_PUBLIC_KEY  = '_sv5r10BYE14Ye7cU';
-const EMAILS = {'Facundo':'atc@nhisa.com.ar','Verónica':'vbenavidez@nhisa.com.ar','Johana':'compras@nhisa.com.ar'};
+const EMAILS = {'Facundo':'atc@nhisa.com.ar','Verónica':'vbenavidez@nhisa.com.ar','Johana':'jrosales@nhisa.com.ar','Daniel':'atc@nhisa.com.ar'};
 const ADMIN_PWD = 'Nhisa.VZEA';
 const MAX_PRODUCTS = 5;
 
@@ -379,6 +419,224 @@ function setLang(lang) {
     if(el.tagName === 'OPTION') el.textContent = val;
     else el.textContent = val;
   });
+}
+
+// ── TERMINALES O UNIONES: catálogo de familias / materiales / variantes ──────
+const TERMINALS = {
+  'SIN ACOPLES': { materials: [], variants: [] },
+  'CAMLOCK': {
+    materials: ['Aluminio','Inox 304','Inox 316','Bronce','Polipropileno','Otro'],
+    variants:  ['Tipo A','B','C','D','E','F','DC','DP','Otro']
+  },
+  'ROSCA': {
+    materials: ['Acero carbono','Inox 304','Inox 316','Bronce','Otro'],
+    variants:  ['Macho fijo NPT','Macho fijo BSPT','Hembra giratoria NPT','Hembra giratoria BSP','Otro']
+  },
+  'BRIDA': {
+    materials: ['Acero carbono','Inox 304','Inox 316','Bronce','Otro'],
+    variants:  ['Fija S150','Fija S300','Fija S600','Fija S900','Fija S1500',
+                'Móvil S150','Móvil S300','Móvil S600','Móvil S900','Móvil S1500','Otro']
+  },
+  'UNIÓN DOBLE / HAMMER UNION': {
+    materials: ['Acero carbono','Otro'],
+    variants:  ['Fija Fig. 200','Fija Fig. 206','Fija Fig. 602','Fija Fig. 1002','Fija Fig. 1502',
+                'Móvil Fig. 200','Móvil Fig. 206','Móvil Fig. 602','Móvil Fig. 1002','Móvil Fig. 1502','Otro']
+  },
+  'BAUER': {
+    materials: ['Acero carbono','Otro'],
+    variants:  ['Macho (esfera + aro)','Hembra (solapa)','Otro']
+  },
+  'PERROT': {
+    materials: ['Acero carbono','Otro'],
+    variants:  ['Macho (solapa)','Hembra (aro)','Otro']
+  },
+  'CLAMP': {
+    materials: ['Inox 304','Inox 316','Otro'],
+    variants:  ['Manguito','Manguito + junta + tapa','Otro']
+  },
+  'VICTAULIC / RANURADO': {
+    materials: ['Acero carbono','Inox 304','Inox 316','Otro'],
+    variants:  ['Sin variante necesaria','Otro']
+  }
+};
+const FAMILY_ORDER = ['SIN ACOPLES','CAMLOCK','ROSCA','BRIDA','UNIÓN DOBLE / HAMMER UNION',
+                      'BAUER','PERROT','CLAMP','VICTAULIC / RANURADO'];
+const TERM_FIELDS = ['A-familia','A-material','A-variante','A-materialOtro','A-varianteOtro',
+                     'B-familia','B-material','B-variante','B-materialOtro','B-varianteOtro'];
+const TXT_SELECT = {es:'— Seleccioná —', en:'— Select —', pt:'— Selecione —'};
+const TXT_NA     = {es:'No aplica', en:'Not applicable', pt:'Não se aplica'};
+
+// Genera el HTML de un extremo (A o B). Cada extremo es totalmente independiente.
+function endpointHTML(id, E) {
+  const famOpts = FAMILY_ORDER.map(f => `<option value="${f}">${f}</option>`).join('');
+  return `
+    <div class="endpoint-block">
+      <div class="endpoint-title" data-es="Extremo ${E}" data-en="End ${E}" data-pt="Extremidade ${E}">Extremo ${E}</div>
+      <div class="endpoint-selects">
+        <div class="term-col" id="tc-p${id}-${E}-familia">
+          <span class="term-label" data-es="Familia" data-en="Family" data-pt="Família">Familia</span>
+          <select id="p${id}-${E}-familia" onchange="onFamiliaChange(${id},'${E}')">
+            <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+            ${famOpts}
+          </select>
+        </div>
+        <div class="term-col" id="tc-p${id}-${E}-material">
+          <span class="term-label" data-es="Material" data-en="Material" data-pt="Material">Material</span>
+          <select id="p${id}-${E}-material" onchange="onMaterialChange(${id},'${E}')" disabled>
+            <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+          </select>
+          <div class="term-other" id="other-p${id}-${E}-material">
+            <label data-es="Especifique el material:" data-en="Specify the material:" data-pt="Especifique o material:">Especifique el material:</label>
+            <input type="text" id="p${id}-${E}-materialOtro" placeholder="Especificar">
+          </div>
+        </div>
+        <div class="term-col" id="tc-p${id}-${E}-variante">
+          <span class="term-label" data-es="Variantes" data-en="Variants" data-pt="Variantes">Variantes</span>
+          <select id="p${id}-${E}-variante" onchange="onVarianteChange(${id},'${E}')" disabled>
+            <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
+          </select>
+          <div class="term-other" id="other-p${id}-${E}-variante">
+            <label data-es="Especifique la variante:" data-en="Specify the variant:" data-pt="Especifique a variante:">Especifique la variante:</label>
+            <input type="text" id="p${id}-${E}-varianteOtro" placeholder="Especificar">
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function fillTermSelect(sel, items, na) {
+  if(!sel) return;
+  sel.innerHTML = '';
+  const ph = document.createElement('option');
+  ph.value = '';
+  const txt = na ? TXT_NA : TXT_SELECT;
+  ph.setAttribute('data-es', txt.es);
+  ph.setAttribute('data-en', txt.en);
+  ph.setAttribute('data-pt', txt.pt);
+  ph.textContent = txt[currentLang] || txt.es;
+  sel.appendChild(ph);
+  items.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  sel.value = '';
+}
+
+function setTermOther(id, E, field, show) {
+  const box = document.getElementById('other-p' + id + '-' + E + '-' + field);
+  if(!box) return;
+  box.classList.toggle('visible', show);
+  if(!show) {
+    const inp = document.getElementById('p' + id + '-' + E + '-' + (field === 'material' ? 'materialOtro' : 'varianteOtro'));
+    if(inp) inp.value = '';
+  }
+}
+
+function setTermInvalid(id, E, field, bad) {
+  const col = document.getElementById('tc-p' + id + '-' + E + '-' + field);
+  if(col) col.classList.toggle('invalid', bad);
+}
+
+function clearTermErr(id, E) {
+  ['familia','material','variante'].forEach(f => setTermInvalid(id, E, f, false));
+  const err = document.getElementById('err-p' + id + '-terminales');
+  if(err) err.classList.remove('show');
+}
+
+// Familia → habilita Material (o marca el extremo como SIN ACOPLES)
+function onFamiliaChange(id, E) {
+  const fam = document.getElementById('p' + id + '-' + E + '-familia').value;
+  const matSel = document.getElementById('p' + id + '-' + E + '-material');
+  const varSel = document.getElementById('p' + id + '-' + E + '-variante');
+  setTermOther(id, E, 'material', false);
+  setTermOther(id, E, 'variante', false);
+  clearTermErr(id, E);
+  if(fam === 'SIN ACOPLES') {
+    fillTermSelect(matSel, [], true);
+    fillTermSelect(varSel, [], true);
+    matSel.disabled = true;  varSel.disabled = true;
+    matSel.classList.add('na'); varSel.classList.add('na');
+  } else if(fam === '') {
+    fillTermSelect(matSel, [], false);
+    fillTermSelect(varSel, [], false);
+    matSel.disabled = true;  varSel.disabled = true;
+    matSel.classList.remove('na'); varSel.classList.remove('na');
+  } else {
+    fillTermSelect(matSel, (TERMINALS[fam] || {materials:[]}).materials, false);
+    matSel.disabled = false; matSel.classList.remove('na');
+    fillTermSelect(varSel, [], false);
+    varSel.disabled = true;  varSel.classList.remove('na');
+  }
+}
+
+// Material → habilita Variantes
+function onMaterialChange(id, E) {
+  const fam = document.getElementById('p' + id + '-' + E + '-familia').value;
+  const mat = document.getElementById('p' + id + '-' + E + '-material').value;
+  const varSel = document.getElementById('p' + id + '-' + E + '-variante');
+  setTermOther(id, E, 'material', mat === 'Otro');
+  setTermOther(id, E, 'variante', false);
+  clearTermErr(id, E);
+  if(mat === '') {
+    fillTermSelect(varSel, [], false);
+    varSel.disabled = true;
+  } else {
+    fillTermSelect(varSel, (TERMINALS[fam] || {variants:[]}).variants, false);
+    varSel.disabled = false;
+  }
+}
+
+function onVarianteChange(id, E) {
+  const va = document.getElementById('p' + id + '-' + E + '-variante').value;
+  setTermOther(id, E, 'variante', va === 'Otro');
+  clearTermErr(id, E);
+}
+
+// Restaura el estado completo de ambos extremos tras un re-render
+function restoreTerminals(id, data) {
+  ['A','B'].forEach(E => {
+    const famSel = document.getElementById('p' + id + '-' + E + '-familia');
+    if(!famSel) return;
+    famSel.value = data[E + '-familia'] || '';
+    onFamiliaChange(id, E);
+    const matSel = document.getElementById('p' + id + '-' + E + '-material');
+    const mat = data[E + '-material'] || '';
+    if(mat && matSel && !matSel.disabled) {
+      matSel.value = mat;
+      if(matSel.value === mat) {
+        onMaterialChange(id, E);
+        if(mat === 'Otro') {
+          const mo = document.getElementById('p' + id + '-' + E + '-materialOtro');
+          if(mo) mo.value = data[E + '-materialOtro'] || '';
+        }
+        const varSel = document.getElementById('p' + id + '-' + E + '-variante');
+        const va = data[E + '-variante'] || '';
+        if(va && varSel && !varSel.disabled) {
+          varSel.value = va;
+          if(varSel.value === va) {
+            onVarianteChange(id, E);
+            if(va === 'Otro') {
+              const vo = document.getElementById('p' + id + '-' + E + '-varianteOtro');
+              if(vo) vo.value = data[E + '-varianteOtro'] || '';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// Texto resumido de un extremo, para la revisión y el email
+function terminalDesc(id, E) {
+  const fam = gv('p' + id + '-' + E + '-familia');
+  if(!fam) return '—';
+  if(fam === 'SIN ACOPLES') return 'SIN ACOPLES';
+  let mat = gv('p' + id + '-' + E + '-material');
+  if(mat === 'Otro') mat = 'Otro: ' + gv('p' + id + '-' + E + '-materialOtro');
+  let va = gv('p' + id + '-' + E + '-variante');
+  if(va === 'Otro') va = 'Otro: ' + gv('p' + id + '-' + E + '-varianteOtro');
+  return [fam, mat, va].filter(Boolean).join(' / ');
 }
 
 // ── PRODUCT HTML GENERATOR ────────────────────────────────────────────────────
@@ -408,10 +666,8 @@ function productHTML(displayNum, id) {
     <select id="p${id}-tipoManguera">
       <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
       <option value="Manguera de caucho" data-es="Manguera de caucho" data-en="Rubber hose" data-pt="Mangueira de borracha">Manguera de caucho</option>
-      <option value="Manguera de PVC" data-es="Manguera de PVC" data-en="PVC hose" data-pt="Mangueira de PVC">Manguera de PVC</option>
       <option value="Manguera Composite" data-es="Manguera Composite" data-en="Composite hose" data-pt="Mangueira Composite">Manguera Composite</option>
       <option value="Manguera Rotary API" data-es="Manguera Rotary API" data-en="Rotary API hose" data-pt="Mangueira Rotary API">Manguera Rotary API</option>
-      <option value="Manguera contra incendios" data-es="Manguera contra incendios" data-en="Fire hose" data-pt="Mangueira de incêndio">Manguera contra incendios</option>
       <option value="Mangueras especiales" data-es="Mangueras especiales" data-en="Special hoses" data-pt="Mangueiras especiais">Mangueras especiales</option>
     </select>
     <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
@@ -429,8 +685,6 @@ function productHTML(displayNum, id) {
       <option value="Saneamiento" data-es="Saneamiento" data-en="Sanitation" data-pt="Saneamento">Saneamiento</option>
       <option value="Siderurgia" data-es="Siderurgia" data-en="Steel industry" data-pt="Siderurgia">Siderurgia</option>
       <option value="Agroindustria" data-es="Agroindustria" data-en="Agroindustry" data-pt="Agroindústria">Agroindustria</option>
-      <option value="Hidráulica" data-es="Hidráulica" data-en="Hydraulics" data-pt="Hidráulica">Hidráulica</option>
-      <option value="Red contra incendio" data-es="Red contra incendio" data-en="Fire protection network" data-pt="Rede de incêndio">Red contra incendio</option>
     </select>
     <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
   </div>
@@ -509,6 +763,9 @@ function productHTML(displayNum, id) {
         <option value="&gt;75%">&gt;75%</option>
         <option value="No especificado" data-es="No especificado" data-en="Not specified" data-pt="Não especificado">No especificado</option>
       </select>
+      <label class="mt" data-es="Nombre del fluido químico:" data-en="Chemical fluid name:" data-pt="Nome do fluido químico:">Nombre del fluido químico:</label>
+      <input type="text" id="p${id}-nombreQuimico" placeholder="Ej: Ácido sulfúrico">
+      <span class="sub-err" data-es="Completá el porcentaje y el nombre del fluido químico." data-en="Complete the concentration and the chemical fluid name." data-pt="Preencha o percentual e o nome do fluido químico.">Completá el porcentaje y el nombre del fluido químico.</span>
     </div>
     <div class="sub-field" id="sub-p${id}-hidrocarburo">
       <label data-es="Porcentaje de aromaticidad:" data-en="Aromaticity percentage:" data-pt="Percentual de aromaticidade:">Porcentaje de aromaticidad:</label>
@@ -569,25 +826,20 @@ function productHTML(displayNum, id) {
     <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
   </div>
 
-  <div class="field">
-    <label><span data-es="Uniones" data-en="Fittings" data-pt="Conexões">Uniones</span><span class="opt" data-es="(opcional)" data-en="(optional)" data-pt="(opcional)">(opcional)</span></label>
-    <div class="field-row" style="gap:10px;margin-bottom:0">
-      <input type="number" id="p${id}-unionesCant" placeholder="Cant." style="width:90px;flex:0 0 90px">
-      <input type="text" id="p${id}-unionesTipo" placeholder="Tipo de acople / material">
-    </div>
+  <div class="field" id="f-p${id}-terminales">
+    <label><span data-es="Terminales o uniones:" data-en="End fittings or couplings:" data-pt="Terminais ou conexões:">Terminales o uniones:</span><span class="req">*</span><span class="note" data-es="(Marcá &quot;SIN ACOPLES&quot; si la manguera no lleva terminales)" data-en="(Select &quot;SIN ACOPLES&quot; if the hose has no end fittings)" data-pt="(Marque &quot;SIN ACOPLES&quot; se a mangueira não leva terminais)">(Marcá "SIN ACOPLES" si la manguera no lleva terminales)</span></label>
+    ${endpointHTML(id, 'A')}
+    ${endpointHTML(id, 'B')}
+    <span class="term-err" id="err-p${id}-terminales"
+      data-es="Completá Familia, Material y Variante en ambos extremos."
+      data-en="Complete Family, Material and Variant on both ends."
+      data-pt="Complete Família, Material e Variante em ambas as extremidades.">Completá Familia, Material y Variante en ambos extremos.</span>
   </div>
 
   <div class="field" id="f-p${id}-norma">
     <label><span data-es="Norma técnica" data-en="Technical standard" data-pt="Norma técnica">Norma técnica</span><span class="req">*</span></label>
-    <select id="p${id}-norma">
-      <option value="" data-es="— Seleccioná —" data-en="— Select —" data-pt="— Selecione —">— Seleccioná —</option>
-      <option value="ISO">ISO</option>
-      <option value="API">API</option>
-      <option value="EN BS">EN BS</option>
-      <option value="SAE">SAE</option>
-      <option value="FDA">FDA</option>
-    </select>
-    <span class="err-msg" data-es="Seleccioná una opción." data-en="Select an option." data-pt="Selecione uma opção.">Seleccioná una opción.</span>
+    <input type="text" id="p${id}-norma" placeholder="Ej: ISO 1436 / API 7K / EN 856 4SP">
+    <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
   </div>
 
   <div class="field">
@@ -600,11 +852,16 @@ function productHTML(displayNum, id) {
 // ── KEY: Save values from DOM into a data object ──────────────────────────────
 function saveProductValues(id) {
   const fields = ['tipoManguera','rubro','aplicacion','servicio','diametro',
-    'diametroCustom','fluido','concQuimico','aromaticidad','presion',
+    'diametroCustom','fluido','concQuimico','nombreQuimico','aromaticidad','presion',
     'presionCustom','temperatura','temperaturaCustom','cantidad',
-    'unionesCant','unionesTipo','norma','observaciones'];
+    'norma','observaciones'];
   const data = {};
   fields.forEach(f => {
+    const el = document.getElementById('p' + id + '-' + f);
+    if(el) data[f] = el.value;
+  });
+  // Terminales o uniones (Extremo A y B, independientes)
+  TERM_FIELDS.forEach(f => {
     const el = document.getElementById('p' + id + '-' + f);
     if(el) data[f] = el.value;
   });
@@ -627,13 +884,15 @@ function saveAllProductValues() {
 function restoreProductValues(id, data) {
   if(!data) return;
   const fields = ['tipoManguera','rubro','aplicacion','servicio','diametro',
-    'diametroCustom','fluido','concQuimico','aromaticidad','presion',
+    'diametroCustom','fluido','concQuimico','nombreQuimico','aromaticidad','presion',
     'presionCustom','temperatura','temperaturaCustom','cantidad',
-    'unionesCant','unionesTipo','norma','observaciones'];
+    'norma','observaciones'];
   fields.forEach(f => {
     const el = document.getElementById('p' + id + '-' + f);
     if(el && data[f] !== undefined) el.value = data[f];
   });
+  // Terminales o uniones: se reconstruye la cascada de cada extremo por separado
+  restoreTerminals(id, data);
   // Restore sub-field visibility
   ['diametro','quimicos','hidrocarburo','presion','temperatura'].forEach(sf => {
     const el = document.getElementById('sub-p' + id + '-' + sf);
@@ -679,7 +938,7 @@ function addProduct() {
   // Validate the last product before adding
   const lastId = productIds[productIds.length - 1];
   if(!validateProductById(lastId)) {
-    const firstInvalid = document.querySelector('#productBlock' + lastId + ' .field.invalid');
+    const firstInvalid = document.querySelector('#productBlock' + lastId + ' .field.invalid, #productBlock' + lastId + ' .sub-field.invalid, #productBlock' + lastId + ' .term-col.invalid');
     if(firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
@@ -778,11 +1037,54 @@ function validateStep(step) {
 }
 
 function validateProductById(id) {
-  const selects = ['tipoManguera','rubro','servicio','diametro','fluido','presion','temperatura','norma'];
-  const texts   = ['aplicacion','cantidad'];
+  const selects = ['tipoManguera','rubro','servicio','diametro','fluido','presion','temperatura'];
+  const texts   = ['aplicacion','cantidad','norma'];
   let ok = true;
   selects.forEach(f => { if(!validateProductSelect(id, f)) ok = false; });
   texts.forEach(f   => { if(!validateProductField(id, f))  ok = false; });
+  if(!validateQuimicos(id))  ok = false;
+  if(!validateTerminals(id)) ok = false;
+  return ok;
+}
+
+// Fluido = Químicos → porcentaje y nombre son obligatorios
+function validateQuimicos(id) {
+  const sub = document.getElementById('sub-p' + id + '-quimicos');
+  const fluido = document.getElementById('p' + id + '-fluido');
+  if(!sub || !fluido) return true;
+  if(fluido.value !== 'Químicos') { sub.classList.remove('invalid'); return true; }
+  const ok = gv('p' + id + '-concQuimico') !== '' && gv('p' + id + '-nombreQuimico') !== '';
+  sub.classList.toggle('invalid', !ok);
+  return ok;
+}
+
+// Terminales o uniones: ambos extremos deben quedar correctamente definidos
+function validateTerminals(id) {
+  let ok = true;
+  ['A','B'].forEach(E => {
+    const famSel = document.getElementById('p' + id + '-' + E + '-familia');
+    if(!famSel) return;
+    const famOk = famSel.value !== '';
+    setTermInvalid(id, E, 'familia', !famOk);
+    if(!famOk) { ok = false; setTermInvalid(id, E, 'material', false); setTermInvalid(id, E, 'variante', false); return; }
+    if(famSel.value === 'SIN ACOPLES') {
+      setTermInvalid(id, E, 'material', false);
+      setTermInvalid(id, E, 'variante', false);
+      return;
+    }
+    const matSel = document.getElementById('p' + id + '-' + E + '-material');
+    let matOk = matSel.value !== '';
+    if(matOk && matSel.value === 'Otro') matOk = gv('p' + id + '-' + E + '-materialOtro') !== '';
+    setTermInvalid(id, E, 'material', !matOk);
+    if(!matOk) ok = false;
+    const varSel = document.getElementById('p' + id + '-' + E + '-variante');
+    let varOk = varSel.value !== '';
+    if(varOk && varSel.value === 'Otro') varOk = gv('p' + id + '-' + E + '-varianteOtro') !== '';
+    setTermInvalid(id, E, 'variante', !varOk);
+    if(!varOk) ok = false;
+  });
+  const err = document.getElementById('err-p' + id + '-terminales');
+  if(err) err.classList.toggle('show', !ok);
   return ok;
 }
 
@@ -828,7 +1130,9 @@ function checkDiametro(id) {
 }
 function checkFluido(id) {
   const v = document.getElementById('p' + id + '-fluido').value;
-  document.getElementById('sub-p' + id + '-quimicos').classList.toggle('visible', v === 'Químicos');
+  const sub = document.getElementById('sub-p' + id + '-quimicos');
+  sub.classList.toggle('visible', v === 'Químicos');
+  if(v !== 'Químicos') sub.classList.remove('invalid');
   document.getElementById('sub-p' + id + '-hidrocarburo').classList.toggle('visible', v === 'Hidrocarburo');
 }
 function checkPresion(id) {
@@ -840,10 +1144,45 @@ function checkTemperatura(id) {
     document.getElementById('p' + id + '-temperatura').value === 'Otro');
 }
 
+// ── SONIDO DE CONFIRMACIÓN ──────────────────────────────────────────
+let bellCtx = null;
+// Se llama dentro del click (gesto del usuario) para habilitar el audio.
+function primeBell() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    if(!bellCtx) bellCtx = new AC();
+    if(bellCtx.state === 'suspended') bellCtx.resume();
+  } catch(e) {}
+}
+// Campana breve y discreta — sólo tras un envío exitoso.
+function playBell() {
+  try {
+    if(!bellCtx) return;
+    if(bellCtx.state === 'suspended') bellCtx.resume();
+    const t = bellCtx.currentTime;
+    const master = bellCtx.createGain();
+    master.gain.setValueAtTime(0.0001, t);
+    master.gain.exponentialRampToValueAtTime(0.16, t + 0.012);
+    master.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+    master.connect(bellCtx.destination);
+    [[880, 1], [1318.5, 0.42], [2640, 0.14]].forEach(([f, g]) => {
+      const osc = bellCtx.createOscillator();
+      const gain = bellCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, t);
+      gain.gain.setValueAtTime(g, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.3);
+      osc.connect(gain); gain.connect(master);
+      osc.start(t); osc.stop(t + 1.6);
+    });
+  } catch(e) {}
+}
+
 // ── ASESOR ────────────────────────────────────────────────────────────────────
 function selectAsesor(name) {
   selectedAsesor = name;
-  ['Facundo','Veronica','Johana'].forEach(n => document.getElementById('card' + n).classList.remove('selected'));
+  ['Facundo','Veronica','Johana','Daniel'].forEach(n => document.getElementById('card' + n).classList.remove('selected'));
   document.getElementById('card' + name.replace('ó','o')).classList.add('selected');
   document.getElementById('asesorErr').style.display = 'none';
 }
@@ -866,8 +1205,10 @@ function getProductData(id) {
     ? 'Otro: ' + gv('p' + id + '-temperaturaCustom')
     : gv('p' + id + '-temperatura');
   let fluido = gv('p' + id + '-fluido');
-  if(fluido === 'Químicos' && gv('p' + id + '-concQuimico'))
-    fluido += ' (Conc. ' + gv('p' + id + '-concQuimico') + ')';
+  if(fluido === 'Químicos') {
+    if(gv('p' + id + '-nombreQuimico')) fluido += ' — ' + gv('p' + id + '-nombreQuimico');
+    if(gv('p' + id + '-concQuimico'))   fluido += ' (Conc. ' + gv('p' + id + '-concQuimico') + ')';
+  }
   if(fluido === 'Hidrocarburo' && gv('p' + id + '-aromaticidad'))
     fluido += ' (Arom. ' + gv('p' + id + '-aromaticidad') + ')';
   return [
@@ -880,7 +1221,8 @@ function getProductData(id) {
     ['Presión',          presion],
     ['Temperatura',      temperatura],
     ['Cantidad',         gv('p' + id + '-cantidad')],
-    ['Uniones',          (gv('p' + id + '-unionesCant') + ' ' + gv('p' + id + '-unionesTipo')).trim() || '—'],
+    ['Terminales — Extremo A', terminalDesc(id, 'A')],
+    ['Terminales — Extremo B', terminalDesc(id, 'B')],
     ['Norma',            gv('p' + id + '-norma')],
     ['Observaciones',    gv('p' + id + '-observaciones') || '—'],
   ];
@@ -915,6 +1257,9 @@ function buildReview() {
 }
 
 // ── SUBMIT ────────────────────────────────────────────────────────────────────
+// Tiempo máximo de espera para el envío antes de avisar al usuario y liberar el botón.
+const EMAILJS_SEND_TIMEOUT_MS = 25000;
+
 function submitForm() {
   if(!selectedAsesor) {
     document.getElementById('asesorErr').style.display = 'block';
@@ -924,67 +1269,111 @@ function submitForm() {
   btn.disabled = true;
   btn.textContent = 'Enviando…';
 
-  const now = new Date();
-  const fecha = now.toLocaleString('es-AR', {timeZone: 'America/Argentina/Buenos_Aires'});
+  // Garantiza que el botón nunca quede "trabado", pase lo que pase.
+  function restoreBtn() {
+    btn.disabled = false;
+    btn.textContent = 'Enviar consulta';
+  }
 
-  const clientRows = [
-    ['Fecha y hora', fecha],
-    ['Empresa',  gv('empresa')],
-    ['Contacto', gv('contacto')],
-    ['Email',    gv('email')],
-    ['Celular',  gv('celular')],
-    ['Atendido por', selectedAsesor],
-  ];
+  try {
+    primeBell();
 
-  let allRows = [...clientRows];
-  productIds.forEach((id, idx) => {
-    allRows.push(['── PRODUCTO ' + (idx + 1) + ' ──', '']);
-    allRows.push(...getProductData(id));
-  });
+    const now = new Date();
+    const fecha = now.toLocaleString('es-AR', {timeZone: 'America/Argentina/Buenos_Aires'});
 
-  let tableHtml = `<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;">
-    <thead><tr style="background:#3A6B47;color:#fff;">
-      <th style="padding:10px 14px;text-align:left;width:38%;">Campo</th>
-      <th style="padding:10px 14px;text-align:left;">Valor</th>
-    </tr></thead><tbody>`;
-  allRows.forEach(([k, v], i) => {
-    const isProd = k.startsWith('──');
-    const bg    = isProd ? '#3A6B47' : (i % 2 === 0 ? '#f5f5f6' : '#eaf2ec');
-    const kc    = isProd ? '#fff' : '#6b6b72';
-    const vc    = isProd ? '#fff' : '#2a2a2e';
-    const fw    = isProd ? '700' : '500';
-    tableHtml += `<tr style="background:${bg};">
-      <td style="padding:9px 14px;font-weight:${fw};color:${kc};">${k}</td>
-      <td style="padding:9px 14px;color:${vc};">${v}</td>
-    </tr>`;
-  });
-  tableHtml += `</tbody></table>`;
+    const clientRows = [
+      ['Fecha y hora', fecha],
+      ['Empresa',  gv('empresa')],
+      ['Contacto', gv('contacto')],
+      ['Email',    gv('email')],
+      ['Celular',  gv('celular')],
+      ['Atendido por', selectedAsesor],
+    ];
 
-  const templateParams = {
-    to_email: EMAILS[selectedAsesor],
-    empresa:  gv('empresa'),
-    tipo_manguera: gv('p' + productIds[0] + '-tipoManguera'),
-    asesor:   selectedAsesor,
-    message:  tableHtml,
-  };
-
-  emailjs.init(EMAILJS_PUBLIC_KEY);
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(() => {
-      saveRecord({
-        fecha, empresa: gv('empresa'), contacto: gv('contacto'),
-        tipoManguera: gv('p' + productIds[0] + '-tipoManguera'),
-        asesor: selectedAsesor, productos: productIds.length, all: allRows
-      });
-      document.getElementById('formBody').style.display = 'none';
-      document.getElementById('successScreen').style.display = 'block';
-    })
-    .catch(err => {
-      console.error(err);
-      btn.disabled = false;
-      btn.textContent = 'Enviar consulta';
-      alert('Error al enviar. Por favor intentá de nuevo.');
+    let allRows = [...clientRows];
+    productIds.forEach((id, idx) => {
+      allRows.push(['── PRODUCTO ' + (idx + 1) + ' ──', '']);
+      allRows.push(...getProductData(id));
     });
+
+    let tableHtml = `<table style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;">
+      <thead><tr style="background:#3A6B47;color:#fff;">
+        <th style="padding:10px 14px;text-align:left;width:38%;">Campo</th>
+        <th style="padding:10px 14px;text-align:left;">Valor</th>
+      </tr></thead><tbody>`;
+    allRows.forEach(([k, v], i) => {
+      const isProd = k.startsWith('──');
+      const bg    = isProd ? '#3A6B47' : (i % 2 === 0 ? '#f5f5f6' : '#eaf2ec');
+      const kc    = isProd ? '#fff' : '#6b6b72';
+      const vc    = isProd ? '#fff' : '#2a2a2e';
+      const fw    = isProd ? '700' : '500';
+      tableHtml += `<tr style="background:${bg};">
+        <td style="padding:9px 14px;font-weight:${fw};color:${kc};">${k}</td>
+        <td style="padding:9px 14px;color:${vc};">${v}</td>
+      </tr>`;
+    });
+    tableHtml += `</tbody></table>`;
+
+    const templateParams = {
+      to_email: EMAILS[selectedAsesor],
+      empresa:  gv('empresa'),
+      tipo_manguera: gv('p' + productIds[0] + '-tipoManguera'),
+      asesor:   selectedAsesor,
+      message:  tableHtml,
+    };
+
+    // Si el script de EmailJS (cargado desde un CDN externo) no llegó a cargar
+    // -por conexión lenta, bloqueadores de anuncios o firewall corporativo-
+    // avisamos con un mensaje claro en vez de tirar un error silencioso que
+    // dejaba el botón trabado en "Enviando…" para siempre.
+    if(typeof emailjs === 'undefined') {
+      throw new Error('EMAILJS_NOT_LOADED');
+    }
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // Si el envío tarda demasiado (conexión lenta o request colgado), este
+    // timeout gana la carrera, libera el botón y avisa en vez de dejar el
+    // formulario "trabado" en Enviando… indefinidamente.
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('SEND_TIMEOUT')), EMAILJS_SEND_TIMEOUT_MS);
+    });
+
+    Promise.race([
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams),
+      timeoutPromise
+    ])
+      .then(() => {
+        saveRecord({
+          fecha, empresa: gv('empresa'), contacto: gv('contacto'),
+          tipoManguera: gv('p' + productIds[0] + '-tipoManguera'),
+          asesor: selectedAsesor, productos: productIds.length, all: allRows
+        });
+        playBell();
+        document.getElementById('formBody').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+      })
+      .catch(err => {
+        console.error(err);
+        restoreBtn();
+        if(err && err.message === 'SEND_TIMEOUT') {
+          alert('La conexión está tardando demasiado en responder. Verificá tu conexión a internet e intentá de nuevo.');
+        } else {
+          alert('Error al enviar. Por favor intentá de nuevo.');
+        }
+      });
+
+  } catch(err) {
+    // Cubre cualquier error sincrónico (incluido emailjs no cargado) que antes
+    // dejaba el botón deshabilitado para siempre sin avisar al usuario.
+    console.error(err);
+    restoreBtn();
+    if(err && err.message === 'EMAILJS_NOT_LOADED') {
+      alert('No se pudo cargar el servicio de envío. Verificá tu conexión a internet, desactivá bloqueadores de anuncios/extensiones para este sitio y volvé a intentar.');
+    } else {
+      alert('Error al enviar. Por favor intentá de nuevo.');
+    }
+  }
 }
 
 // ── RESET ─────────────────────────────────────────────────────────────────────
