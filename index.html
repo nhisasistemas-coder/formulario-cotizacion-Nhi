@@ -847,7 +847,7 @@ function productHTML(displayNum, id) {
   </div>
 
   <div class="field" id="f-p${id}-norma">
-    <label><span data-es="Norma técnica" data-en="Technical standard" data-pt="Norma técnica">Norma técnica</span><span class="req">*</span></label>
+    <label><span data-es="Norma técnica" data-en="Technical standard" data-pt="Norma técnica">Norma técnica</span><span class="opt" data-es="(opcional)" data-en="(optional)" data-pt="(opcional)">(opcional)</span></label>
     <input type="text" id="p${id}-norma" placeholder="Ej: ISO 1436 / API 7K / EN 856 4SP">
     <span class="err-msg" data-es="Este campo es obligatorio." data-en="This field is required." data-pt="Este campo é obrigatório.">Este campo es obligatorio.</span>
   </div>
@@ -1048,7 +1048,7 @@ function validateStep(step) {
 
 function validateProductById(id) {
   const selects = ['tipoManguera','rubro','servicio','diametro','fluido','presion','temperatura'];
-  const texts   = ['aplicacion','cantidad','norma'];
+  const texts   = ['aplicacion','cantidad'];
   let ok = true;
   selects.forEach(f => { if(!validateProductSelect(id, f)) ok = false; });
   texts.forEach(f   => { if(!validateProductField(id, f))  ok = false; });
