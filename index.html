@@ -84,7 +84,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
 .review-product-title{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin:20px 0 8px;padding:8px 12px;background:var(--green-light);border-radius:var(--radius);border-left:3px solid var(--green);}
 .review-product-title:first-child{margin-top:0;}
 /* ATTENDEE CARDS */
-.attendee-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px;}
+.attendee-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px;}
 .attendee-card{border:2px solid var(--gray-mid);border-radius:8px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .15s;}
 .attendee-card:hover{border-color:var(--green);background:var(--green-light);}
 .attendee-card.selected{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 3px rgba(58,107,71,.15);}
@@ -294,6 +294,23 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
       <!-- Products review: injected by JS -->
       <div id="reviewProductsContainer"></div>
 
+      <div class="section-title" style="margin-top:24px" data-es="¿De dónde nos conocés?" data-en="How did you hear about us?" data-pt="Como você nos conheceu?">¿De dónde nos conocés?</div>
+      <div class="field" id="f-origen">
+        <select id="origenContacto" onchange="selectOrigen()">
+          <option value="" data-es="Seleccioná una opción" data-en="Select an option" data-pt="Selecione uma opção">Seleccioná una opción</option>
+          <option value="Google" data-es="Google" data-en="Google" data-pt="Google">Google</option>
+          <option value="Instagram" data-es="Instagram" data-en="Instagram" data-pt="Instagram">Instagram</option>
+          <option value="LinkedIn" data-es="LinkedIn" data-en="LinkedIn" data-pt="LinkedIn">LinkedIn</option>
+          <option value="Referido/Recomendación" data-es="Referido/Recomendación" data-en="Referral/Recommendation" data-pt="Indicação/Recomendação">Referido/Recomendación</option>
+          <option value="Vendedor" data-es="Vendedor" data-en="Salesperson" data-pt="Vendedor">Vendedor</option>
+          <option value="Ya soy cliente" data-es="Ya soy cliente" data-en="I'm already a customer" data-pt="Já sou cliente">Ya soy cliente</option>
+        </select>
+        <span class="err-msg" id="origenErr"
+          data-es="Seleccioná de dónde nos conocés."
+          data-en="Select how you heard about us."
+          data-pt="Selecione como você nos conheceu.">Seleccioná de dónde nos conocés.</span>
+      </div>
+
       <div class="section-title" style="margin-top:24px" data-es="¿Quién te atendió?" data-en="Who assisted you?" data-pt="Quem te atendeu?">¿Quién te atendió?</div>
       <div class="field" id="f-asesor">
         <div class="attendee-grid">
@@ -312,6 +329,10 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
           <label class="attendee-card" id="cardDaniel">
             <input type="radio" name="asesor" value="Daniel" onchange="selectAsesor('Daniel')">
             <span class="attendee-name">Daniel</span>
+          </label>
+          <label class="attendee-card" id="cardSergio">
+            <input type="radio" name="asesor" value="Sergio" onchange="selectAsesor('Sergio')">
+            <span class="attendee-name">Sergio</span>
           </label>
         </div>
         <span class="err-msg" id="asesorErr" style="display:none"
@@ -404,7 +425,7 @@ body{font-family:'Inter',sans-serif;background:#f0f2f4;color:var(--text);min-hei
 const EMAILJS_SERVICE_ID  = 'service_2mr2zgb';
 const EMAILJS_TEMPLATE_ID = 'template_fb28af3';
 const EMAILJS_PUBLIC_KEY  = '_sv5r10BYE14Ye7cU';
-const EMAILS = {'Facundo':'atc@nhisa.com.ar','Verónica':'vbenavidez@nhisa.com.ar','Johana':'jrosales@nhisa.com.ar','Daniel':'atc@nhisa.com.ar'};
+const EMAILS = {'Facundo':'atc@nhisa.com.ar','Verónica':'vbenavidez@nhisa.com.ar','Johana':'jrosales@nhisa.com.ar','Daniel':'atc@nhisa.com.ar','Sergio':'atc@nhisa.com.ar'};
 const ADMIN_PWD = 'Nhisa.VZEA';
 const MAX_PRODUCTS = 5;
 
@@ -1192,9 +1213,14 @@ function playBell() {
 // ── ASESOR ────────────────────────────────────────────────────────────────────
 function selectAsesor(name) {
   selectedAsesor = name;
-  ['Facundo','Veronica','Johana','Daniel'].forEach(n => document.getElementById('card' + n).classList.remove('selected'));
+  ['Facundo','Veronica','Johana','Daniel','Sergio'].forEach(n => document.getElementById('card' + n).classList.remove('selected'));
   document.getElementById('card' + name.replace('ó','o')).classList.add('selected');
   document.getElementById('asesorErr').style.display = 'none';
+}
+
+// ── ORIGEN DEL CONTACTO ───────────────────────────────────────────────────────
+function selectOrigen() {
+  if(document.getElementById('origenContacto').value) document.getElementById('f-origen').classList.remove('invalid');
 }
 
 // ── GET VALUE HELPER ──────────────────────────────────────────────────────────
@@ -1271,10 +1297,12 @@ function buildReview() {
 const EMAILJS_SEND_TIMEOUT_MS = 25000;
 
 function submitForm() {
+  const origenContacto = document.getElementById('origenContacto').value;
+  if(!origenContacto) document.getElementById('f-origen').classList.add('invalid');
   if(!selectedAsesor) {
     document.getElementById('asesorErr').style.display = 'block';
-    return;
   }
+  if(!origenContacto || !selectedAsesor) return;
   const btn = document.getElementById('btnEnviar');
   btn.disabled = true;
   btn.textContent = 'Enviando…';
@@ -1298,6 +1326,7 @@ function submitForm() {
       ['Email',    gv('email')],
       ['Celular',  gv('celular')],
       ['Atendido por', selectedAsesor],
+      ['Origen del contacto', origenContacto],
     ];
 
     let allRows = [...clientRows];
@@ -1389,6 +1418,8 @@ function submitForm() {
 // ── RESET ─────────────────────────────────────────────────────────────────────
 function resetForm() {
   selectedAsesor = '';
+  document.getElementById('origenContacto').value = '';
+  document.getElementById('f-origen').classList.remove('invalid');
   document.querySelectorAll('.attendee-card').forEach(el => el.classList.remove('selected'));
   document.getElementById('successScreen').style.display = 'none';
   document.getElementById('formBody').style.display = 'block';
